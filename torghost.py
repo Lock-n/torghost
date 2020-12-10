@@ -108,6 +108,10 @@ resolv = '/etc/resolv.conf'
 
 def start_torghost():
     print(t() + ' Always check for updates using -u option')
+
+    os.system('sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1')
+    os.system('sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1')
+
     os.system('sudo cp /etc/resolv.conf /etc/resolv.conf.bak')
     if os.path.exists(Torrc) and TorrcCfgString in open(Torrc).read():
         print(t() + ' Torrc file already configured')
@@ -170,6 +174,10 @@ def stop_torghost():
     print(bcolors.RED + t() + 'STOPPING torghost' + bcolors.ENDC)
     print(t() + ' Flushing iptables, resetting to default'),
     os.system('mv /etc/resolv.conf.bak /etc/resolv.conf')
+
+    os.system('sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0')
+    os.system('sudo sysctl -w net.ipv6.conf.default.disable_ipv6=0')
+
     IpFlush = \
         """
 	iptables -P INPUT ACCEPT
